@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}首页 - 百度贴吧{% endblock %}
+
+{% block content %}
+    <!-- 轮播图/推荐区域 -->
+    <div class="tieba-card mb-4">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://picsum.photos/id/1/1200/300" class="d-block w-100" alt="百度贴吧热门活动">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://picsum.photos/id/2/1200/300" class="d-block w-100" alt="贴吧精选内容">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://picsum.photos/id/3/1200/300" class="d-block w-100" alt="社区公告">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- 左侧：热门贴吧列表 -->
+        <div class="col-md-3 mb-4">
+            <div class="tieba-card sticky-top" style="top: 80px;">
+                <h4 class="mb-3">热门贴吧</h4>
+                <div class="list-group">
+                    {% for i in "1234567890" %}
+                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                        <img src="https://picsum.photos/id/{{ forloop.counter }}/40/40" class="tieba-avatar me-3" alt="贴吧头像">
+                        <div>
+                            <div class="font-weight-medium">热门话题{{ forloop.counter }}</div>
+                            <div class="text-xs text-muted">{{ forloop.counter|add:10 }}000 关注</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="mt-3 text-center">
+                    <a href="#" class="text-primary text-sm">查看更多 ></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：帖子列表 -->
+        <div class="col-md-9">
+            <!-- 帖子操作栏 -->
+            <div class="tieba-card mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <button class="btn btn-outline-primary btn-sm active me-2">全部</button>
+                        <button class="btn btn-outline-secondary btn-sm me-2">最新</button>
+                        <button class="btn btn-outline-secondary btn-sm me-2">热门</button>
+                        <button class="btn btn-outline-secondary btn-sm">精华</button>
+                    </div>
+                    <div>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-secondary btn-sm">
+                                <i class="fa fa-filter"></i> 筛选
+                            </button>
+                            <button class="btn btn-tieba">
+                                <i class="fa fa-pencil"></i> 发帖
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 帖子列表 -->
+            {% for entry in entries %}
+                <div class="tieba-card">
+                    <div class="d-flex">
+                        <!-- 帖子内容 -->
+                        <div class="flex-grow-1">
+                            <!-- 帖子标题 -->
+                            <div class="d-flex items-center mb-2">
+                                {% if forloop.counter <= 3 %}
+                                    <span class="badge badge-top me-2">置顶</span>
+                                {% elif forloop.counter <= 5 %}
+                                    <span class="badge badge-essence me-2">精华</span>
+                                {% endif %}
+                                <h3 class="tieba-title mb-0">
+                                    <a href="{% url 'entry_detail' title=entry.title %}" class="text-decoration-none">
+                                        {{ entry.title }}
+                                    </a>
+                                </h3>
+                            </div>
+                            <!-- 帖子摘要 -->
+                            <p class="text-muted mb-3" style="font-size: 14px; line-height: 1.6;">
+                                {{ entry.content|truncatechars:150 }}
+                            </p>
+                            <!-- 帖子信息 -->
+                            <div class="d-flex justify-content-between align-items-center tieba-info">
+                                <div>
+                                    <span class="tieba-author me-3">{{ entry.author|default:"匿名用户" }}</span>
+                                    <span class="me-3">{{ entry.create_time|date:"Y-m-d H:i" }}</span>
+                                </div>
+                                <div class="tieba-stats">
+                                    <span class="me-3"><i class="fa fa-eye"></i> {{ forloop.counter|add:100 }}</span>
+                                    <span class="me-3"><i class="fa fa-comment"></i> {{ forloop.counter|add:5 }}</span>
+                                    <span><i class="fa fa-thumbs-up"></i> {{ forloop.counter|add:20 }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 帖子缩略图 -->
+                        {% if forloop.counter <= 5 %}
+                            <div class="ml-3">
+                                <img src="https://picsum.photos/id/{{ forloop.counter|add:10 }}/100/100" width="80" height="80" class="rounded" alt="帖子图片">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if not entries %}
+                <div class="tieba-card text-center py-6">
+                    <i class="fa fa-folder-open-o text-4xl text-muted mb-3"></i>
+                    <p class="text-muted">暂无帖子，来发布第一个帖子吧！</p>
+                    <button class="btn btn-tieba mt-2">立即发帖</button>
+                </div>
+            {% endif %}
+
+            <!-- 分页 -->
+            <div class="mt-4 text-center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><span class="page-link">...</span></li>
+                        <li class="page-item"><a class="page-link" href="#">10</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // 初始化轮播图
+        document.addEventListener('DOMContentLoaded', function() {
+            var carousel = new bootstrap.Carousel(document.getElementById('carouselExampleControls'), {
+                interval: 5000,
+                wrap: true
+            });
+        });
+    </script>
+{% endblock %}

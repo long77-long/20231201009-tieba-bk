@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ entry.title }} - 百度贴吧{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <!-- 左侧：帖子详情 -->
+        <div class="col-md-9">
+            <!-- 帖子主体 -->
+            <div class="tieba-card mb-4">
+                <!-- 帖子头部信息 -->
+                <div class="d-flex items-center mb-4">
+                    <img src="https://picsum.photos/id/20/50/50" class="tieba-avatar me-3" alt="用户头像">
+                    <div>
+                        <div class="font-weight-bold">{{ entry.author|default:"匿名用户" }}</div>
+                        <div class="text-xs text-muted">{{ entry.created_at|date:"Y-m-d H:i:s" }}</div>
+                    </div>
+                    <div class="ml-auto">
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 帖子标题 -->
+                <h1 class="tieba-title mb-4">
+                    {% if entry.is_top %}
+                        <span class="badge badge-top me-2">置顶</span>
+                    {% endif %}
+                    {% if entry.is_essence %}
+                        <span class="badge badge-essence me-2">精华</span>
+                    {% endif %}
+                    {{ entry.title }}
+                </h1>
+                
+                <!-- 帖子内容 -->
+                <div class="post-content mb-4" style="font-size: 16px; line-height: 1.8; white-space: pre-wrap;">
+                    {{ entry.content }}
+                </div>
+                
+                <!-- 帖子图片 -->
+                <div class="post-images mb-4">
+                    <div class="row row-cols-2 row-cols-md-3 g-2">
+                        <div class="col">
+                            <img src="https://picsum.photos/id/21/400/300" class="w-100 rounded" alt="帖子图片1">
+                        </div>
+                        <div class="col">
+                            <img src="https://picsum.photos/id/22/400/300" class="w-100 rounded" alt="帖子图片2">
+                        </div>
+                        <div class="col">
+                            <img src="https://picsum.photos/id/23/400/300" class="w-100 rounded" alt="帖子图片3">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 帖子互动 -->
+                <div class="border-top pt-3">
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-outline-secondary btn-sm flex-1" style="margin-right: 8px;">
+                            <i class="fa fa-thumbs-up"></i> 点赞 ({{ entry.like_count|default:0 }})
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm flex-1" style="margin-right: 8px;">
+                            <i class="fa fa-comment"></i> 评论 ({{ entry.reply_count|default:0 }})
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm flex-1" style="margin-right: 8px;">
+                            <i class="fa fa-star"></i> 收藏
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm flex-1">
+                            <i class="fa fa-share-alt"></i> 分享
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 评论输入框 -->
+            <div class="tieba-card mb-4">
+                <div class="d-flex">
+                    <img src="https://picsum.photos/id/30/50/50" class="tieba-avatar me-3" alt="当前用户头像">
+                    <div class="flex-grow-1">
+                        <textarea class="form-control mb-2" rows="3" placeholder="发表你的看法..."></textarea>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted">
+                                <i class="fa fa-image cursor-pointer me-3"></i>
+                                <i class="fa fa-smile-o cursor-pointer me-3"></i>
+                                <i class="fa fa-at cursor-pointer"></i>
+                            </div>
+                            <button class="btn btn-tieba">发表评论</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 评论列表 -->
+            <div class="tieba-card mb-4">
+                <h3 class="mb-3">评论 (15)</h3>
+                
+                {% for i in "12345" %}
+                <!-- 评论项 -->
+                <div class="comment-item mb-4 pb-4 border-bottom">
+                    <div class="d-flex">
+                        <img src="https://picsum.photos/id/{{ forloop.counter + 30 }}/50/50" class="tieba-avatar me-3" alt="评论用户头像">
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <div class="font-weight-bold">用户{{ forloop.counter }}</div>
+                                <div class="text-xs text-muted">{{ forloop.counter }}分钟前</div>
+                            </div>
+                            <div class="comment-content mt-1 mb-2" style="line-height: 1.6;">
+                                这是第{{ forloop.counter }}条评论，内容非常精彩，我很赞同楼主的观点！
+                            </div>
+                            <div class="d-flex text-xs text-muted">
+                                <button class="btn btn-link p-0 me-3">回复</button>
+                                <button class="btn btn-link p-0 me-3"><i class="fa fa-thumbs-up"></i> {{ forloop.counter * 10 }}</button>
+                                <button class="btn btn-link p-0"><i class="fa fa-thumbs-down"></i> 0</button>
+                            </div>
+                            
+                            <!-- 评论的回复 -->
+                            {% if forloop.counter <= 3 %}
+                            <div class="replies mt-3 pl-3 border-l-2 border-gray-200">
+                                <div class="reply-item mb-2">
+                                    <div class="text-sm">
+                                        <span class="font-weight-bold">用户{{ forloop.counter + 10 }}</span>
+                                        <span class="text-muted">回复</span>
+                                        <span class="font-weight-bold">用户{{ forloop.counter }}</span>:
+                                        <span>这是回复内容，我也觉得很有道理！</span>
+                                    </div>
+                                    <div class="d-flex text-xs text-muted mt-1">
+                                        <button class="btn btn-link p-0 me-3">回复</button>
+                                        <button class="btn btn-link p-0"><i class="fa fa-thumbs-up"></i> {{ forloop.counter * 5 }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- 加载更多评论 -->
+                <div class="text-center">
+                    <button class="btn btn-outline-secondary btn-sm">加载更多评论</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧：相关信息 -->
+        <div class="col-md-3">
+            <!-- 帖子信息卡片 -->
+            <div class="tieba-card mb-4 sticky-top" style="top: 80px;">
+                <h4 class="mb-3">帖子信息</h4>
+                <div class="bg-light p-3 rounded mb-3">
+                    <img src="https://picsum.photos/id/40/100/100" class="w-100 rounded mb-2" alt="贴吧封面">
+                    <h5 class="text-center mb-1">热门话题吧</h5>
+                    <p class="text-xs text-center text-muted mb-2">12,345 关注 · 56,789 帖子</p>
+                    <button class="btn btn-block btn-outline-primary btn-sm">关注</button>
+                </div>
+                
+                <h4 class="mb-3">相关推荐</h4>
+                <ul class="list-unstyled">
+                    {% for i in "12345" %}
+                    <li class="mb-2">
+                        <a href="#" class="text-decoration-none text-sm" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            相关推荐话题{{ forloop.counter }}：这是一个与当前帖子内容相关的推荐话题
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

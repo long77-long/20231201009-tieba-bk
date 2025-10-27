@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}发布帖子 - 百度贴吧{% endblock %}
+
+{% block content %}
+    <div class="tieba-card">
+        <h2 class="mb-4">发布帖子</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- 选择贴吧 -->
+            <div class="mb-4">
+                <label for="tieba-select" class="form-label">选择贴吧</label>
+                <div class="input-group">
+                    <select id="tieba-select" class="form-select">
+                        <option value="">请选择要发布的贴吧</option>
+                        {% for i in "12345" %}
+                        <option value="{{ forloop.counter }}">热门话题吧{{ forloop.counter }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 帖子标题 -->
+            <div class="mb-4">
+                <label for="id_title" class="form-label">帖子标题</label>
+                {{ form.title }}
+                <div class="text-xs text-muted mt-1">请输入标题，5-50字</div>
+            </div>
+            
+            <!-- 富文本编辑器 -->
+            <div class="mb-4">
+                <label class="form-label">帖子内容</label>
+                
+                <!-- 编辑器工具栏 -->
+                <div class="bg-light p-2 rounded-top border border-bottom-0">
+                    <div class="btn-group mr-2 mb-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-bold"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-italic"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-underline"></i></button>
+                    </div>
+                    <div class="btn-group mr-2 mb-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-list-ul"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-list-ol"></i></button>
+                    </div>
+                    <div class="btn-group mr-2 mb-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-link"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-image"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-smile-o"></i></button>
+                    </div>
+                    <div class="btn-group mr-2 mb-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-at"></i> @</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-code"></i></button>
+                    </div>
+                </div>
+                
+                <!-- 编辑器内容区 -->
+                {{ form.content }}
+                <div class="text-xs text-muted mt-1">支持文字、图片、视频等内容，最多5000字</div>
+            </div>
+            
+            <!-- 图片上传 -->
+            <div class="mb-4">
+                <label class="form-label">添加图片</label>
+                <div class="border border-dashed p-4 text-center">
+                    <i class="fa fa-cloud-upload text-2xl text-muted mb-2"></i>
+                    <p class="text-muted">点击或拖拽图片到此处上传</p>
+                    <p class="text-xs text-muted">最多上传9张，单张不超过10MB</p>
+                    <input type="file" multiple accept="image/*" class="d-none" id="image-upload">
+                    <button type="button" class="btn btn-outline-secondary btn-sm mt-2" onclick="document.getElementById('image-upload').click()">
+                        选择图片
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 发布选项 -->
+            <div class="mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="anonymous-post">
+                    <label class="form-check-label" for="anonymous-post">
+                        匿名发布
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-outline-secondary mr-2">保存草稿</button>
+                    <button type="button" class="btn btn-outline-secondary">预览</button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-outline-secondary mr-2">取消</button>
+                    <button type="submit" class="btn btn-tieba">发布帖子</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- 简单的前端验证 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const titleInput = document.querySelector('#id_title');
+        const contentInput = document.querySelector('#id_content');
+        const categoryInput = document.querySelector('#id_category');
+        
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // 标题验证
+            if (!titleInput.value.trim()) {
+                isValid = false;
+                alert('请输入词条标题');
+                titleInput.focus();
+            }
+            
+            // 分类验证
+            if (isValid && !categoryInput.value.trim()) {
+                isValid = false;
+                alert('请输入词条分类');
+                categoryInput.focus();
+            }
+            
+            // 内容验证
+            if (isValid && !contentInput.value.trim()) {
+                isValid = false;
+                alert('请输入词条内容');
+                contentInput.focus();
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+{% endblock %}

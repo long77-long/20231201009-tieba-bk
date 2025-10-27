@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}百度贴吧{% endblock %}</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin-bottom: 60px;
+            background-color: #f6f6f6;
+        }
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tieba-bg {
+            background-color: #f6f6f6;
+        }
+        .tieba-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .tieba-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .tieba-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .tieba-title:hover {
+            color: #1e88e5;
+        }
+        .tieba-info {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+        .tieba-author {
+            color: #666;
+            font-weight: 500;
+        }
+        .tieba-stats {
+            font-size: 12px;
+            color: #999;
+        }
+        .tieba-category {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        .tieba-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .tieba-banner {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+        .btn-tieba {
+            background-color: #f10215;
+            color: white;
+            border: none;
+        }
+        .btn-tieba:hover {
+            background-color: #d30213;
+            color: white;
+        }
+        .search-bar {
+            max-width: 600px;
+        }
+        .badge-top {
+            background-color: #f10215;
+            color: white;
+        }
+        .badge-essence {
+            background-color: #ff8c00;
+            color: white;
+        }
+        .badge-hot {
+            background-color: #00bfff;
+            color: white;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="tieba-bg">
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand text-danger" href="{% url 'entry_list' %}">百度贴吧</a>
+            <!-- 搜索框 -->
+            <div class="search-bar mx-auto">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="搜索贴吧、帖子或用户" aria-label="搜索">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'entry_list' %}">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">发现</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">消息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-tieba" href="#">发帖</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="container mt-4 mb-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white py-4 border-top">
+        <div class="container">
+            <div class="text-center text-muted">
+                <p class="mb-1">© 2024 百度贴吧 - 全球最大中文社区</p>
+                <p class="text-xs">京ICP备XXXXXXXX号-X | 京公网安备XXXXXXXXXXXXX号</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
