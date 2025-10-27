@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}登录 - 百度贴吧{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-5">
+    <div class="col-md-6">
+        <div class="tieba-card p-5">
+            <h2 class="text-center mb-5">欢迎登录百度贴吧</h2>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger mb-4">
+                <strong>用户名或密码错误，请重试</strong>
+            </div>
+            {% endif %}
+            
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label for="id_username" class="form-label">用户名</label>
+                    <input type="text" name="username" class="form-control" id="id_username" placeholder="请输入用户名" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="id_password" class="form-label">密码</label>
+                    <input type="password" name="password" class="form-control" id="id_password" placeholder="请输入密码" required>
+                </div>
+                
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="remember_me">
+                        <label class="form-check-label" for="remember_me">记住我</label>
+                    </div>
+                    <a href="#" class="text-primary text-sm">忘记密码？</a>
+                </div>
+                
+                <button type="submit" class="btn btn-tieba w-100 py-2 mb-3">登录</button>
+                
+                <div class="text-center">
+                    <span class="text-muted">还没有账号？</span>
+                    <a href="{% url 'register' %}" class="text-primary">立即注册</a>
+                </div>
+            </form>
+            
+            <div class="mt-5 text-center">
+                <div class="text-muted mb-3">其他登录方式</div>
+                <div class="d-flex justify-content-center gap-4">
+                    <a href="#" class="text-primary"><i class="fa fa-qq text-2xl"></i></a>
+                    <a href="#" class="text-primary"><i class="fa fa-weixin text-2xl"></i></a>
+                    <a href="#" class="text-primary"><i class="fa fa-weibo text-2xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+    .tieba-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    .tieba-card:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    .form-control {
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 10px 12px;
+        transition: border-color 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #1e88e5;
+        box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+    }
+</style>
+{% endblock %}

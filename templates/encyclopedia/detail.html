@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ entry.title }} - 百度贴吧{% endblock %}
+{% block title %}{{ post.title }} - 百度贴吧{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -12,8 +12,8 @@
                 <div class="d-flex items-center mb-4">
                     <img src="https://picsum.photos/id/20/50/50" class="tieba-avatar me-3" alt="用户头像">
                     <div>
-                        <div class="font-weight-bold">{{ entry.author|default:"匿名用户" }}</div>
-                        <div class="text-xs text-muted">{{ entry.created_at|date:"Y-m-d H:i:s" }}</div>
+                        <div class="font-weight-bold">{{ post.author|default:"匿名用户" }}</div>
+                        <div class="text-xs text-muted">{{ post.create_time|date:"Y-m-d H:i:s" }}</div>
                     </div>
                     <div class="ml-auto">
                         <button class="btn btn-outline-secondary btn-sm">
@@ -24,18 +24,18 @@
                 
                 <!-- 帖子标题 -->
                 <h1 class="tieba-title mb-4">
-                    {% if entry.is_top %}
+                    {% if post.is_top %}
                         <span class="badge badge-top me-2">置顶</span>
                     {% endif %}
-                    {% if entry.is_essence %}
+                    {% if post.is_essence %}
                         <span class="badge badge-essence me-2">精华</span>
                     {% endif %}
-                    {{ entry.title }}
+                    {{ post.title }}
                 </h1>
                 
                 <!-- 帖子内容 -->
                 <div class="post-content mb-4" style="font-size: 16px; line-height: 1.8; white-space: pre-wrap;">
-                    {{ entry.content }}
+                    {{ post.content }}
                 </div>
                 
                 <!-- 帖子图片 -->

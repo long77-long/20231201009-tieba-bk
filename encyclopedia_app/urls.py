@@ -2,8 +2,17 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.entry_list, name='entry_list'),
-    path('<str:title>/', views.entry_detail, name='entry_detail'),
-    path('create/', views.entry_create, name='entry_create'),
-    path('<str:title>/edit/', views.entry_edit, name='entry_edit'),
+    # 首页和帖子相关路由
+    path('', views.home, name='home'),
+    path('detail/<str:title>/', views.post_detail, name='post_detail'),
+    path('create/', views.post_create, name='post_create'),
+    path('edit/<str:title>/', views.post_edit, name='post_edit'),
+    
+    # 用户相关路由
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('register/', views.user_register, name='register'),
+    
+    # 贴吧相关路由
+    path('tieba/<str:tieba_name>/', views.tieba_detail, name='tieba_detail'),
 ]

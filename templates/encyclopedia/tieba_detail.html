@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ tieba.name }} - 百度贴吧{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- 左侧：贴吧信息 -->
+    <div class="col-md-3 mb-4">
+        <div class="tieba-card sticky-top" style="top: 80px;">
+            <div class="text-center p-4">
+                <img src="https://picsum.photos/id/{{ tieba.id }}/80/80" class="rounded-circle mb-3" alt="{{ tieba.name }}头像">
+                <h3 class="mb-2">{{ tieba.name }}</h3>
+                <p class="text-muted text-sm mb-3">{{ tieba.description|default:"暂无描述" }}</p>
+                
+                <div class="d-flex justify-content-around mb-4">
+                    <div>
+                        <div class="text-2xl font-bold text-primary">{{ tieba.member_count }}</div>
+                        <div class="text-xs text-muted">关注数</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-primary">{{ tieba.post_count }}</div>
+                        <div class="text-xs text-muted">帖子数</div>
+                    </div>
+                </div>
+                
+                {% if user.is_authenticated %}
+                <button class="btn btn-tieba w-100 mb-2">
+                    <i class="fa fa-plus"></i> 关注贴吧
+                </button>
+                {% endif %}
+            </div>
+            
+            <div class="border-t p-4">
+                <h4 class="mb-3">吧务团队</h4>
+                <div class="space-y-2">
+                    <div class="d-flex items-center">
+                        <span class="badge bg-danger me-2">吧主</span>
+                        <div class="flex-grow-1 text-truncate">吧主名称</div>
+                    </div>
+                    <div class="d-flex items-center">
+                        <span class="badge bg-warning me-2">小吧主</span>
+                        <div class="flex-grow-1 text-truncate">小吧主名称</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 右侧：帖子列表 -->
+    <div class="col-md-9">
+        <!-- 帖子操作栏 -->
+        <div class="tieba-card mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <button class="btn btn-outline-primary btn-sm active me-2">全部</button>
+                    <button class="btn btn-outline-secondary btn-sm me-2">热门</button>
+                    <button class="btn btn-outline-secondary btn-sm">最新</button>
+                </div>
+                <div>
+                    <a href="{% url 'post_create' %}" class="btn btn-tieba">
+                        <i class="fa fa-pencil"></i> 发帖
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 帖子列表 -->
+        {% for post in posts %}
+        <div class="tieba-card hover-shadow mb-3">
+            <div class="d-flex">
+                <!-- 帖子内容 -->
+                <div class="flex-grow-1">
+                    <!-- 帖子标题 -->
+                    <div class="d-flex items-center mb-2">
+                        {% if post.is_top %}
+                            <span class="badge badge-top me-2">置顶</span>
+                        {% elif post.is_essence %}
+                            <span class="badge badge-essence me-2">精华</span>
+                        {% endif %}
+                        <h3 class="tieba-title mb-0">
+                            <a href="{% url 'post_detail' post.id %}" class="text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h3>
+                    </div>
+                    
+                    <!-- 帖子摘要 -->
+                    <p class="text-muted mb-3" style="font-size: 14px; line-height: 1.6;">
+                        {{ post.content|truncatechars:150 }}
+                    </p>
+                    
+                    <!-- 帖子信息 -->
+                    <div class="d-flex justify-content-between align-items-center tieba-info">
+                        <div>
+                            <span class="tieba-author me-3">{{ post.author|default:"匿名用户" }}</span>
+                            <span class="me-3">{{ post.create_time|date:"Y-m-d H:i" }}</span>
+                        </div>
+                        <div class="tieba-stats">
+                            <span class="me-3"><i class="fa fa-eye"></i> {{ post.view_count|default:100 }}</span>
+                            <span class="me-3"><i class="fa fa-comment"></i> {{ post.comment_count|default:5 }}</span>
+                            <span><i class="fa fa-thumbs-up"></i> {{ post.like_count|default:20 }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 帖子缩略图 -->
+                {% if forloop.counter <= 5 %}
+                <div class="ml-3">
+                    <img src="https://picsum.photos/id/{{ forloop.counter|add:20 }}/100/100" width="80" height="80" class="rounded" alt="帖子图片">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        
+        <!-- 分页 -->
+        <div class="mt-4 text-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if posts.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page in posts.paginator.page_range %}
+                    <li class="page-item {% if posts.number == page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if posts.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hover-shadow:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+</style>
+{% endblock %}
